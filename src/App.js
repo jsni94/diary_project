@@ -1,9 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import DiaryEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList";
 import "./App.css";
-
-//https://jsonplaceholder.typicode.com/comments
 
 function App() {
   const [data, setData] = useState([]);
@@ -71,9 +69,32 @@ function App() {
     );
   };
 
+  //유즈메모를 사용하면 불필요한 함수 호출을 줄여서 최적화를 진행할 수 있다.
+  //유즈 메모는 콜백함수로 전달받은 함수가 리턴하는 값을 리턴하기 때문에 getDiaryAnalysis는
+  //값을 리턴받게 된다. 그래서 하단에 비구조화 할당을 통해 값을 할당할 때 () 표시를 빼주어야 함.
+  const getDiaryAnalysis = useMemo(() => {
+    if (data.length === 0) {
+      return { goodcount: 0, badCount: 0, goodRatio: 0 };
+    }
+    console.log("일기 분석 시작");
+
+    const goodCount = data.filter((it) => it.emotion >= 3).length;
+    const badCount = data.length - goodCount;
+    const goodRatio = (goodCount / data.length) * 100.0;
+    return { goodCount, badCount, goodRatio };
+    //디펜던시 어레이로 data.length를 넣게 되면 data.length가 변화할때만
+    //함수가 다시 연산작용을 해 새로운 값을 리턴하게 됨, 그 외의 경우엔 기존의
+    //리턴값을 기억해서 따로 연산작용 없이 기억된 리턴값만 리턴하게 됨
+  }, [data.length]);
+
+  const { goodCount, badCount, goodRatio } = getDiaryAnalysis;
   return (
     <div className="App">
       <DiaryEditor onCreate={onCreate} />
+      <div>전체 일기 : {data.length}</div>
+      <div>기분 좋은 일기 개수 : {goodCount}</div>
+      <div>기분 나쁜 일기 개수 : {badCount}</div>
+      <div>기분 좋은 일기 비율 : {goodRatio}</div>
       <DiaryList onEdit={onEdit} diaryList={data} onDelete={onDelete} />
     </div>
   );
