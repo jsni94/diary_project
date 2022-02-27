@@ -3,6 +3,7 @@ import DiaryEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList";
 import "./App.css";
 
+//설명추가
 function App() {
   const [data, setData] = useState([]);
 
@@ -95,6 +96,7 @@ function App() {
       <div>기분 좋은 일기 개수 : {goodCount}</div>
       <div>기분 나쁜 일기 개수 : {badCount}</div>
       <div>기분 좋은 일기 비율 : {goodRatio}</div>
+      <br />
       <DiaryList onEdit={onEdit} diaryList={data} onDelete={onDelete} />
     </div>
   );
