@@ -77,7 +77,6 @@ function App() {
     if (data.length === 0) {
       return { goodcount: 0, badCount: 0, goodRatio: 0 };
     }
-    console.log("일기 분석 시작");
 
     const goodCount = data.filter((it) => it.emotion >= 3).length;
     const badCount = data.length - goodCount;
